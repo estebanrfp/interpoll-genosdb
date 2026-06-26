@@ -4,7 +4,7 @@
 # This is what prevents the blank-page / 404-on-bundles you get when the
 # build isn't served from the web root.
 [build]
-  command = "npm run build"
+  command = "pnpm run build"
   publish = "dist"
 
 [[redirects]]
