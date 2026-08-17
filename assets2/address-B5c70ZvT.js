@@ -1,0 +1,1 @@
+function a(t){return t?/^0x[a-fA-F0-9]{40}$/.test(t)?`${t.slice(0,6)}...${t.slice(-4)}`:t:""}function o(t){const e=t||"?";let r=0;for(let s=0;s<e.length;s++)r=r*31+e.charCodeAt(s)>>>0;const n=r%360,i=(e.replace(/^0x/i,"")[0]||"?").toUpperCase();return{gradient:`linear-gradient(135deg, hsl(${n} 72% 58%), hsl(${(n+48)%360} 70% 46%))`,initial:i}}export{o as a,a as f};
