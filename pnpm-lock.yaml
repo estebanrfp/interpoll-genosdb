@@ -36,8 +36,8 @@ dependencies:
     specifier: 3.4.11
     version: 3.4.11
   genosdb:
-    specifier: 0.31.0
-    version: 0.31.0
+    specifier: 0.33.4
+    version: 0.33.4
   idb:
     specifier: ^8.0.0
     version: 8.0.3
@@ -1513,8 +1513,8 @@ packages:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
     dev: true
 
-  /genosdb@0.31.0:
-    resolution: {integrity: sha512-GI0QzHOqhf9q8FOu2Zbqv6s6QX336NeA2ytsoJNaKRJRUksP+W7BfVIE0Nm+7zThwaYP+TbU5M8gnUSD9/ZOHA==}
+  /genosdb@0.33.4:
+    resolution: {integrity: sha512-7owZE484D8D93cTy/uE7oNcB6muZUJYIWo7G2SqqIaQU7ZdWJifeexuZP/rjhelcynp/NCc4BWSVotA1cG/sgw==}
     dev: false
 
   /glob-parent@5.1.2:
