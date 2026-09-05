@@ -7,6 +7,15 @@ real-time layer rebuilt on [GenosDB](https://github.com/estebanrfp/gdb). The for
 is based on [Keep a Changelog](https://keepachangelog.com/), and dates use ISO 8601.
 See [WHY-GENOSDB.md](./WHY-GENOSDB.md) for the full rationale, metrics and evidence.
 
+## [2026-09-05] — GenosDB from the CDN
+
+### Changed
+
+- **GenosDB is no longer installed or copied into the build.** `gdbServices.ts` loads
+  `genosdb@latest` from the jsDelivr CDN at runtime, where the engine resolves its own
+  modules beside itself; the copy script, the `public/genosdb/` folder and the npm
+  dependency are gone, and every engine release reaches the app without a rebuild.
+
 ## [2026-06-21] — Governance, reactivity & moderation
 
 ### Added

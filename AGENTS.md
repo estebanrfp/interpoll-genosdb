@@ -46,12 +46,9 @@ pnpm build
 pnpm test      # Vitest
 ```
 
-GenosDB ships a self-contained `dist/` and resolves its own modules at runtime via
-`import(new URL('./*.min.js', import.meta.url))`. Rather than bundling it, the app
-loads it **intact from a single served folder** (`<base>/genosdb/`): the
-`genosdb-static` plugin in `vite.config.ts` serves that folder from `node_modules` in
-dev and copies it verbatim into the build. `build.target` is `es2022` (GenosDB's
-top-level `await`).
+GenosDB is neither installed nor bundled: `gdbServices.ts` loads it at runtime from the
+jsDelivr CDN (`genosdb@latest`), where it resolves its own modules beside itself.
+`build.target` is `es2022` (GenosDB's top-level `await`).
 
 ---
 

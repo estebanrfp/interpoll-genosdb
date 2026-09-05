@@ -54,12 +54,8 @@ function ghPagesSpaFallbackPlugin() {
   };
 }
 
-// GenosDB ships a self-contained dist/ and resolves its own modules at runtime via
-// new URL('./*.min.js', import.meta.url), so it must be served intact from one folder
-// rather than bundled. `scripts/copy-genosdb.mjs` (run by the dev/build npm scripts)
-// copies that folder into public/genosdb, which Vite serves natively in dev and copies
-// into the build output — no custom plugin needed. The app loads it via a dynamic
-// import of `${import.meta.env.BASE_URL}genosdb/index.js` (see gdbServices.ts).
+// GenosDB is neither installed nor bundled: gdbServices.ts loads it from the CDN at
+// runtime, where it resolves its own plugins beside itself.
 export default defineConfig({
   // GitHub Pages serves project sites under /<repo>/. Build with GH_PAGES=1 to
   // emit that base; local dev/preview stays at root.
@@ -77,8 +73,7 @@ export default defineConfig({
     global: 'globalThis'
   },
   optimizeDeps: {
-    // genosdb is not pre-bundled here — it is served intact as a static folder
-    // by the genosdb-static plugin and loaded via dynamic import (see gdbServices).
+    // genosdb is not a dependency: it is loaded from the CDN at runtime (see gdbServices).
     exclude: ['@ionic/vue'],
     esbuildOptions: {
       target: 'es2022',

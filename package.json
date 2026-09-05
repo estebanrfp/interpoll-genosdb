@@ -4,8 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node scripts/copy-genosdb.mjs && vite",
-    "build": "node scripts/copy-genosdb.mjs && vite build",
+    "dev": "vite",
+    "build": "vite build",
     "preview": "vite preview",
     "start": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
@@ -23,7 +23,6 @@
     "@wxperia/liquid-glass-vue": "^1.0.9",
     "browser-image-compression": "^2.0.2",
     "dompurify": "3.4.11",
-    "genosdb": "0.33.4",
     "idb": "^8.0.0",
     "ionicons": "^7.2.1",
     "marked": "18.0.5",

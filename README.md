@@ -125,7 +125,7 @@ pnpm preview   # Serve the built dist/ folder locally
 pnpm test      # Run the Vitest test suite
 ```
 
-> **Bundler note:** GenosDB ships a self-contained `dist/` and resolves its own modules (Security Manager, GenosRTC, …) at runtime via `import(new URL('./*.min.js', import.meta.url))`. Rather than bundling it, the app loads it **intact from a single served folder** (`<base>/genosdb/`): a small `genosdb-static` Vite plugin serves that folder from `node_modules` in dev and copies it verbatim into the build. `build.target` is `es2022` (for GenosDB's top-level `await`).
+> **Bundler note:** GenosDB is neither installed nor bundled. `gdbServices.ts` loads it at runtime from the jsDelivr CDN (`genosdb@latest`), where the engine resolves its own modules (Security Manager, GenosRTC, …) beside itself, so every engine release reaches the app without a rebuild. `build.target` is `es2022` (for GenosDB's top-level `await`).
 
 ---
 
@@ -133,7 +133,7 @@ pnpm test      # Run the Vitest test suite
 
 ### Stack
 
-Vue 3 + Ionic + Pinia + Vite on the front end; **GenosDB** for data, identity and P2P sync. Installing GenosDB pulls **zero transitive dependencies**.
+Vue 3 + Ionic + Pinia + Vite on the front end; **GenosDB** for data, identity and P2P sync, loaded from the CDN: **nothing to install**.
 
 ### Data model
 

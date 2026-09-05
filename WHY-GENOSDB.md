@@ -12,8 +12,8 @@
 
 | | InterPoll before | InterPoll on GenosDB |
 |---|---|---|
-| **Runtime dependencies** | **28** | **18** (the UI stack stays untouched) |
-| ↳ data / P2P / crypto / storage stack | **13** of them | **1** (`genosdb`) |
+| **Runtime dependencies** | **28** | **17** (the UI stack stays untouched; `genosdb` comes from the CDN) |
+| ↳ data / P2P / crypto / storage stack | **13** of them | **0** installed (`genosdb`, from the CDN) |
 | **Service files** (`src/services`) | **~40** | **17** |
 | **Source lines** (`src`, ts+vue) | **~46,000** | **~19,800** (−57%) |
 | **Relay servers to run** | **3** + `peer.js` | **0** (Nostr signaling) |
@@ -175,7 +175,7 @@ ignore it, or ask me anything.
 | Posts (service + store) | 1,142 | 335 | **−71%** |
 | Comments (service + store) | 915 | 253 | **−72%** |
 | `gunService.ts` → `gdbServices.ts` | 433 | ~30 | **−93%** |
-| Runtime dependencies | 28 | 18 (one of them is `genosdb`) | the 13-dep P2P/crypto stack → **1** |
+| Runtime dependencies | 28 | 17 (`genosdb` comes from the CDN) | the 13-dep P2P/crypto stack → **0** installed |
 | Relay servers to operate | 3 + `peer.js` | **0** | Nostr signaling |
 
 ## What the previous stack made you build by hand — and what GenosDB does for you
@@ -295,12 +295,9 @@ We mention them only to show the model is safer, not just smaller:
 
 The migrated app builds with Vite and runs live on GenosDB:
 
-- **Bundler:** Vite. GenosDB ships a self-contained `dist/` and resolves its own
-  modules at runtime via `import(new URL('./*.min.js', import.meta.url))`, so rather
-  than bundling it the app loads it **intact from one served folder** (`<base>/genosdb/`)
-  via a small `genosdb-static` plugin (serves it from `node_modules` in dev, copies it
-  into the build); build `target: 'es2022'` (top-level await for the `gdb()` init).
-  `npm install genosdb` adds **zero transitive dependencies**.
+- **Bundler:** Vite. GenosDB is neither installed nor bundled: the app loads it at
+  runtime from the jsDelivr CDN (`genosdb@latest`), where it resolves its own modules
+  beside itself; build `target: 'es2022'` (top-level await for the `gdb()` init).
 - **Onboarding:** a minimalist identity gate (`OnboardingModal.vue`) backed by the
   Security Manager, following the SM UX best practices (state-callback as single
   source of truth, always-available mnemonic login, read-only phrase + save
@@ -347,7 +344,7 @@ GenosDB, and the app compiles, runs and was verified live in the browser.
 
 | Metric | Before (Gun) | After (GenosDB) |
 |---|---:|---:|
-| Runtime dependencies | 28 | **18** (the P2P/crypto/storage stack: 13 → **1**, `genosdb`) |
+| Runtime dependencies | 28 | **17** (the P2P/crypto/storage stack: 13 → **0** installed; `genosdb` comes from the CDN) |
 | Source lines (`src`, ts+vue) | ~46,000 | **~19,800** (−57%) |
 | Service files | ~40 | **17** |
 | Relay servers to operate | 3 + `peer.js` | **0** |
