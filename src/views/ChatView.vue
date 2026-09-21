@@ -85,7 +85,6 @@ import {
 } from '@ionic/vue';
 import ChatService, { ChatMessage } from '../services/chatService';
 import { UserService } from '../services/userService';
-import config from '@/config';
 import { formatAddress, addressAvatar } from '../utils/address';
 
 const route = useRoute();
@@ -94,8 +93,6 @@ const props = defineProps<{ userId: string }>();
 const recipientId = computed(() => props.userId || (route.params.userId as string) || '');
 const recipientName = computed(() => formatAddress(route.query.name as string) || 'User');
 const peerAvatar = computed(() => addressAvatar(recipientId.value || (route.query.name as string)));
-
-const WS_URL = config.relay.websocket;
 
 // ── State ─────────────────────────────────────────────────────────────────────
 const connected      = ref(false);
@@ -162,7 +159,7 @@ async function initializeChat() {
   const currentUser = await UserService.getCurrentUser();
   if (gen !== initGeneration) return;
 
-  const service = new ChatService(WS_URL, currentUser.id);
+  const service = new ChatService(currentUser.id);
   bindChatCallbacks(service);
   chatService = service;
 

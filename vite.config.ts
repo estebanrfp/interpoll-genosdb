@@ -98,27 +98,14 @@ export default defineConfig({
     rollupOptions: {
       onwarn(warning, warn) {
         if (warning.code === 'SOURCEMAP_ERROR') return;
-        if (warning.code === 'CIRCULAR_DEPENDENCY') return; // Gun.js has many
         warn(warning);
       },
       output: {
-        // 4. Manual chunk splitting — breaks up that 1.5MB vendor bundle
+        // 4. Manual chunk splitting — keeps the vendor bundle from growing unbounded
         manualChunks(id) {
-          // Gun.js into its own chunk
-          if (id.includes('node_modules/gun')) {
-            return 'vendor-gun';
-          }
-          // IPFS into its own chunk
-          if (id.includes('node_modules/ipfs') || id.includes('node_modules/ipfs-core')) {
-            return 'vendor-ipfs';
-          }
           // Ionic UI into its own chunk (large, but rarely changes)
           if (id.includes('node_modules/@ionic')) {
             return 'vendor-ionic';
-          }
-          // Crypto libs together
-          if (id.includes('node_modules/@noble') || id.includes('node_modules/bip39')) {
-            return 'vendor-crypto';
           }
           // Vue ecosystem together
           if (id.includes('node_modules/vue') || id.includes('node_modules/pinia') || id.includes('node_modules/vue-router')) {

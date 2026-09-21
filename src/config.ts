@@ -1,24 +1,17 @@
 /**
  * Centralised application configuration.
  *
- * Every value can be overridden at runtime via Settings/localStorage.
- * Defaults always point to Render deployment URLs.
+ * There are no relay endpoints to configure: GenosDB reaches its peers over
+ * GenosRTC (Nostr signalling + WebRTC), which discovers and heals its own relay
+ * set at boot. What remains here is the server-wide encryption policy, which is
+ * a product decision rather than a transport one.
  *
  * Usage:
  *   import config from '@/config';
- *   const ws = new WebSocket(config.relay.websocket);
+ *   if (config.isServerEncrypted()) { ... }
  */
 
-const STORAGE_KEY = 'interpoll_relay_config';
 const ENCRYPTION_STORAGE_KEY = 'interpoll_encryption_config';
-// v3 — removed dead Heroku relays; existing installs get clean defaults
-const GUN_PEERS_STORAGE_KEY = 'interpoll_gun_peers_v3';
-
-interface RelayOverrides {
-  websocket?: string;
-  gun?: string;
-  api?: string;
-}
 
 interface EncryptionConfig {
   encryptAll?: boolean;
@@ -26,42 +19,6 @@ interface EncryptionConfig {
   requireInviteToJoin?: boolean;
 }
 
-function loadOverrides(): RelayOverrides {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw);
-  } catch {
-    // Corrupted data; ignore
-  }
-  return {};
-}
-
-function loadGunPeers(): string[] | null {
-  try {
-    const raw = localStorage.getItem(GUN_PEERS_STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-    }
-  } catch {
-    // Corrupted data; ignore
-  }
-  return null;
-}
-
-// Defaults always point to Render URLs
-//const defaults = {
-//  websocket: 'wss://interpoll.onrender.com',
- // gun: 'https://interpoll2.onrender.com/gun',
- // api: 'https://interpoll.onrender.com',
-//};
-
-// Defaults point to VPS
-const defaults = {
-  websocket: 'wss://interpoll.endless.sbs',
-  gun: 'https://interpoll2.endless.sbs/gun',
-  api: 'https://interpoll.endless.sbs',
-};
 function loadEncryptionConfig(): EncryptionConfig {
   try {
     const raw = localStorage.getItem(ENCRYPTION_STORAGE_KEY);
@@ -72,33 +29,9 @@ function loadEncryptionConfig(): EncryptionConfig {
   return {};
 }
 
-let overrides = loadOverrides();
 let encryptionConfig = loadEncryptionConfig();
-let gunPeers: string[] | null = loadGunPeers();
-
-function ws(): string {
-  return overrides.websocket || defaults.websocket;
-}
-function gun(): string {
-  return overrides.gun || defaults.gun;
-}
-function api(): string {
-  return overrides.api || defaults.api;
-}
 
 const config = {
-  /** Network relay endpoints (mutable at runtime) */
-  relay: {
-    get websocket() { return ws(); },
-    get gun() { return gun(); },
-    get api() { return api(); },
-  },
-
-  /** Trusted backend origin for auth/session-gated requests */
-  auth: {
-    get api() { return defaults.api; },
-  },
-
   /** Server-wide encryption settings (mutable at runtime) */
   encryption: {
     /** Whether all content should be encrypted by default */
@@ -107,59 +40,6 @@ const config = {
     get serverPassword() { return encryptionConfig.serverPassword; },
     /** Whether new users need an invite link to access the server */
     get requireInviteToJoin() { return encryptionConfig.requireInviteToJoin ?? false; },
-  },
-
-  /** Default (build-time) relay URLs */
-  defaults,
-
-  /** Save runtime relay overrides and return the new active values */
-  setRelayOverrides(partial: RelayOverrides) {
-    overrides = { ...overrides, ...partial };
-    // Strip empty strings so defaults apply
-    for (const key of Object.keys(overrides) as (keyof RelayOverrides)[]) {
-      if (!overrides[key]) delete overrides[key];
-    }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
-  },
-
-  /** Clear all runtime overrides and revert to build-time defaults */
-  resetRelayOverrides() {
-    overrides = {};
-    localStorage.removeItem(STORAGE_KEY);
-  },
-
-  /** Get current overrides (if any) */
-  getRelayOverrides(): RelayOverrides {
-    return { ...overrides };
-  },
-
-  /**
-   * Get the active Gun peer list.
-   * Falls back to DEFAULT_GUN_PEERS (imported lazily to avoid circular deps at module load).
-   */
-  getGunPeers(): string[] {
-    if (gunPeers && gunPeers.length > 0) return [...gunPeers];
-    return [
-      defaults.gun,
-      'https://relay.peer.ooo/gun',
-    ];
-  },
-
-  /** Persist a new Gun peer list */
-  setGunPeers(urls: string[]) {
-    gunPeers = urls.filter(u => !!u.trim());
-    if (gunPeers.length === 0) {
-      gunPeers = null;
-      localStorage.removeItem(GUN_PEERS_STORAGE_KEY);
-    } else {
-      localStorage.setItem(GUN_PEERS_STORAGE_KEY, JSON.stringify(gunPeers));
-    }
-  },
-
-  /** Reset Gun peers to built-in defaults */
-  resetGunPeers() {
-    gunPeers = null;
-    localStorage.removeItem(GUN_PEERS_STORAGE_KEY);
   },
 
   /** Check if server-wide encryption is active */

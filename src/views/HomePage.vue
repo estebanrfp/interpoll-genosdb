@@ -440,7 +440,6 @@ import { Poll } from '../services/pollService';
 import { db } from '../services/gdbServices';
 import { UserService } from '../services/userService';
 import ChatService from '../services/chatService';
-import config from '../config';
 import { formatAddress } from '../utils/address';
 
 const router = useRouter();
@@ -735,8 +734,7 @@ async function loadChatList() {
 }
 
 async function initBackgroundChat() {
-  const WS_URL = config.relay.websocket;
-  bgChatService = new ChatService(WS_URL, currentUserId);
+  bgChatService = new ChatService(currentUserId);
   bgChatService.onConnectionChange = () => {};
 
   bgChatService.onMessage = (msg) => {

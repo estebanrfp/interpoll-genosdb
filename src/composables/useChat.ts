@@ -18,7 +18,7 @@ interface UseChatReturn {
   isTyping: (recipientId: string) => boolean;
 }
 
-export function useChat(wsUrl: string, userId: string): UseChatReturn {
+export function useChat(userId: string): UseChatReturn {
   const chat = ref<ChatService | null>(null);
   const connected = ref(false);
   const messages = ref<Record<string, ChatMessage[]>>({});
@@ -26,7 +26,7 @@ export function useChat(wsUrl: string, userId: string): UseChatReturn {
   const publicKey = ref('');
 
   const initChat = async () => {
-    const chatService = new ChatService(wsUrl, userId);
+    const chatService = new ChatService(userId);
 
     // Setup callbacks
     chatService.onMessage = (msg: ChatMessage) => {
@@ -128,7 +128,7 @@ export function useChat(wsUrl: string, userId: string): UseChatReturn {
   };
 
   onMounted(() => {
-    if (wsUrl && userId) {
+    if (userId) {
       initChat();
     }
   });

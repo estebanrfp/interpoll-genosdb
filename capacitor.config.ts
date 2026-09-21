@@ -1,8 +1,8 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.votingchain.app',
-  appName: 'Voting Chain',
+  appId: 'com.interpoll.app',
+  appName: 'InterPoll',
   webDir: 'dist',
   server: {
     androidScheme: 'https'

@@ -40,8 +40,7 @@ class ChatService {
   public onReadReceipt: ((data: { from: string }) => void) | null = null
   public onConnectionChange: ((connected: boolean) => void) | null = null
 
-  // wsUrl is accepted for API compatibility but unused — GenosDB needs no relay socket.
-  constructor(_wsUrl: string, userId: string) {
+  constructor(userId: string) {
     this.userId = userId
   }
 
