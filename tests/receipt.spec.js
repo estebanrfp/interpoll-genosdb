@@ -31,12 +31,16 @@ function expectedCode(nodeId) {
  */
 async function signIn(page) {
   await page.waitForFunction(() => window.db?.sm, null, { timeout: 60_000 })
+  // Wait for the gate to actually be up before signing in. Asserting only that
+  // it is gone races a dialog that has not mounted yet: the assertion passes on
+  // an empty page and the modal then appears over whatever the test clicks next.
+  await expect(page.locator('.ob-shell')).toBeVisible()
   const address = await page.evaluate(async () => {
     const { mnemonic } = await window.db.sm.startNewUserRegistration()
     await window.db.sm.loginOrRecoverUserWithMnemonic(mnemonic)
     return window.db.sm.getActiveEthAddress()
   })
-  await expect(page.getByRole('dialog')).toHaveCount(0)
+  await expect(page.locator('.ob-shell')).toHaveCount(0)
   return address
 }
 

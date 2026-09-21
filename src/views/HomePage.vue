@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header :class="{ 'header-hidden': isHeaderHidden }">
       <ion-toolbar>
-        <ion-title class="logo-title">Interpoll</ion-title>
+        <ion-title class="logo-title">Interpoll <span class="logo-edition">(GenosDB)</span></ion-title>
         <!-- These buttons are hidden on desktop (768px+) and moved to side-nav -->
         <ion-buttons slot="end" class="header-util-buttons">
           <ion-button @click="$router.push('/search')">
@@ -378,7 +378,7 @@
           </div>
 
           <div class="sidebar-section sidebar-about surface-card">
-            <p class="sidebar-about-title">Interpoll</p>
+            <p class="sidebar-about-title">Interpoll <span class="logo-edition">(GenosDB)</span></p>
             <p class="sidebar-about-text">A peer-to-peer community platform built on GenosDB. Posts and votes sync across all peers.</p>
           </div>
         </aside>
@@ -1188,6 +1188,14 @@ if (FEED_DEBUG) {
 <style scoped>
 
 .main-content { padding: 20px; }
+
+/* Names the edition without competing with the mark it qualifies. */
+.logo-edition {
+  font-size: 0.62em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--app-text-subtle);
+}
 
 .logo-title {
   font-family: inherit;

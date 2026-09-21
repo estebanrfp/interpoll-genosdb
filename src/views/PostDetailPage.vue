@@ -219,7 +219,7 @@ const postId = computed(() => route.params.postId as string);
 // Meta tags via watch — avoids @unhead/vue context issues
 watch(post, (p) => {
   if (!p) return;
-  document.title = `${p.title} - Interpoll`;
+  document.title = `${p.title} - Interpoll (GenosDB)`;
 
   const setMeta = (attr: string, val: string, content: string) => {
     let el = document.querySelector(`meta[${attr}="${val}"]`);

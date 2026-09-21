@@ -3,7 +3,7 @@
     <div class="ip-canvas-wrap">
       <canvas ref="canvasRef" width="200" height="200"></canvas>
     </div>
-    <div class="ip-logo">Interpoll</div>
+    <div class="ip-logo">Interpoll <span class="ip-logo-edition">(GenosDB)</span></div>
     <div class="ip-tagline">peer-to-peer · decentralized</div>
     <div class="ip-bar-wrap"><div class="ip-bar"></div></div>
     <div class="ip-status">
@@ -149,6 +149,13 @@ onUnmounted(() => cancelAnimationFrame(rafId))
   margin-bottom: 0.2rem;
   z-index: 1;
   color: rgba(255, 255, 255, 0.94);
+}
+
+.ip-logo-edition {
+  font-size: 0.55em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .ip-tagline {
