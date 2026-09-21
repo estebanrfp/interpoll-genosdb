@@ -83,7 +83,8 @@ import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
   IonButtons, IonBackButton, IonNote, onIonViewWillEnter
 } from '@ionic/vue';
-import ChatService, { ChatMessage } from '../services/chatService';
+import ChatService from '../services/chatService';
+import type { ChatMessage } from '../services/chatService';
 import { UserService } from '../services/userService';
 import { formatAddress, addressAvatar } from '../utils/address';
 

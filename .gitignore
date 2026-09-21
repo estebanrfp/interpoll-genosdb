@@ -43,3 +43,7 @@ src/services/copilot-services.md
 
 # Deploy artifacts (manual Netlify zip uploads)
 deploy.zip
+
+# Playwright
+test-results/
+playwright-report/

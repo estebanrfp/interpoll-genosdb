@@ -81,6 +81,8 @@ const COMMANDS: CommandItem[] = [
   { id: 'nav:profile', title: 'Open Profile', description: 'Manage your profile settings.', category: 'Navigation', keywords: ['profile', 'account'] },
   { id: 'nav:settings', title: 'Open Settings', description: 'Configure relays and app behavior.', category: 'Navigation', keywords: ['settings', 'config'] },
   { id: 'nav:resilience', title: 'Open Resilience Center', description: 'Relay health and continuity tools.', category: 'Navigation', keywords: ['resilience', 'relay', 'network'] },
+  { id: 'nav:chain', title: 'Open Chain Explorer', description: 'Browse every signed operation this device holds.', category: 'Navigation', keywords: ['chain', 'explorer', 'signed', 'operations', 'audit'] },
+  { id: 'nav:receipt', title: 'Verify a Receipt', description: 'Resolve a vote receipt code.', category: 'Navigation', keywords: ['receipt', 'verify', 'vote', 'code'] },
   { id: 'create:community', title: 'Create Community', description: 'Start a new community.', category: 'Create', keywords: ['create', 'community', 'new'] },
   { id: 'create:poll', title: 'Create Poll', description: 'Publish a new poll.', category: 'Create', keywords: ['create', 'poll', 'vote'] },
   { id: 'tools:reload', title: 'Reload App', description: 'Hard refresh the current page.', category: 'Tools', keywords: ['reload', 'refresh'], shortcut: 'R' },
@@ -151,6 +153,12 @@ async function runCommand(commandId: string) {
       break;
     case 'nav:resilience':
       await router.push('/resilience');
+      break;
+    case 'nav:chain':
+      await router.push('/chain-explorer');
+      break;
+    case 'nav:receipt':
+      await router.push('/receipt');
       break;
     case 'create:community':
       await router.push('/create-community');

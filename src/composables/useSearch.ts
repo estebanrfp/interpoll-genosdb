@@ -1,7 +1,9 @@
 // useSearch.ts - Vue Composable for Full-Text Search
 
-import { ref, Ref } from 'vue';
-import SearchService, { SearchResult, SearchOptions, SearchResponse } from '../services/searchService';
+import { ref } from 'vue';
+import type { Ref } from 'vue';
+import SearchService from '../services/searchService';
+import type { SearchResult, SearchOptions, SearchResponse } from '../services/searchService';
 
 interface UseSearchReturn {
   searchService: SearchService;

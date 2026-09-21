@@ -7,7 +7,8 @@
 // scores from signed vote nodes, and syncs P2P + cross-tab natively.
 import { defineStore } from 'pinia'
 import { ref, computed, onScopeDispose } from 'vue'
-import { Post, PostService } from '../services/postService'
+import { PostService } from '../services/postService'
+import type { Post } from '../services/postService'
 import { UserService } from '../services/userService'
 import { generatePseudonym } from '../utils/pseudonym'
 

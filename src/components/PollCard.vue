@@ -90,7 +90,7 @@ import {
   chevronForwardOutline,
   warningOutline
 } from 'ionicons/icons';
-import { Poll } from '../services/pollService';
+import type { Poll } from '../services/pollService';
 import type { FilterAction } from '../services/moderationService';
 import { generatePseudonym } from '../utils/pseudonym';
 

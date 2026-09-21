@@ -366,7 +366,7 @@ import {
   warningOutline,
   trashOutline
 } from 'ionicons/icons';
-import { Post } from '../services/postService';
+import type { Post } from '../services/postService';
 import type { FilterAction } from '../services/moderationService';
 import { generatePseudonym } from '../utils/pseudonym';
 import { stripMarkdown } from '../utils/markdown';

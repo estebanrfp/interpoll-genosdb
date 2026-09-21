@@ -7,7 +7,8 @@
 // syncs P2P and persists to OPFS, so a single reactive subscription is enough.
 import { defineStore } from 'pinia'
 import { ref, onScopeDispose } from 'vue'
-import { Community, CommunityService } from '../services/communityService'
+import { CommunityService } from '../services/communityService'
+import type { Community } from '../services/communityService'
 import { UserService } from '../services/userService'
 import { db } from '../services/gdbServices'
 

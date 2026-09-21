@@ -65,7 +65,8 @@ import {
 } from '@ionic/vue';
 import { informationCircle, warningOutline } from 'ionicons/icons';
 import { usePollStore } from '../stores/pollStore';
-import { PollService, Poll, PollOption } from '../services/pollService';
+import { PollService } from '../services/pollService';
+import type { Poll, PollOption } from '../services/pollService';
 
 interface Props {
   poll: Poll;

@@ -254,7 +254,7 @@ import {
   warningOutline,
 } from 'ionicons/icons';
 import { useCommentStore } from '../stores/commentStore';
-import { Comment } from '../services/commentService';
+import type { Comment } from '../services/commentService';
 import { generatePseudonym } from '../utils/pseudonym';
 import type { FilterAction } from '../services/moderationService';
 import { ModerationService } from '../services/moderationService';

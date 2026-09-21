@@ -5,7 +5,8 @@
 // A single reactive subscription delivers threaded comments with derived scores.
 import { defineStore } from 'pinia'
 import { ref, onScopeDispose } from 'vue'
-import { Comment, CommentService } from '../services/commentService'
+import { CommentService } from '../services/commentService'
+import type { Comment } from '../services/commentService'
 import { generatePseudonym } from '../utils/pseudonym'
 import { UserService } from '../services/userService'
 

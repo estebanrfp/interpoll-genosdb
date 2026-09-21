@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
-import { RouteRecordRaw } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', redirect: '/home' },
@@ -33,6 +33,8 @@ const routes: Array<RouteRecordRaw> = [
   { path: '/search', name: 'Search', component: () => import('../views/SearchView.vue') },
   { path: '/chat/:userId', name: 'Chat', component: () => import('../views/ChatView.vue'), props: true },
   { path: '/resilience', name: 'Resilience', component: () => import('../views/ResiliencePage.vue') },
+  { path: '/chain-explorer', name: 'ChainExplorer', component: () => import('../views/ChainExplorerPage.vue') },
+  { path: '/receipt/:code?', name: 'Receipt', component: () => import('../views/ReceiptPage.vue'), props: true },
   { path: '/chatroom/:roomId', name: 'ChatRoom', component: () => import('../views/ChatRoomPage.vue'), props: true },
   { path: '/chatrooms', name: 'ChatRoomList', component: () => import('../views/ChatRoomListPage.vue') },
   { path: '/join/:type/:id', name: 'JoinPrivate', component: () => import('../views/JoinPrivatePage.vue') },

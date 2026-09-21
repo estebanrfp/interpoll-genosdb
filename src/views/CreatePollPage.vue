@@ -168,7 +168,7 @@ import {
 } from 'ionicons/icons';
 import { useCommunityStore } from '../stores/communityStore';
 import { usePollStore } from '../stores/pollStore';
-import { Community } from '../services/communityService';
+import type { Community } from '../services/communityService';
 import { checkContent, checkOption } from '../utils/contentGuard';
 
 const POLL_DEBUG_KEY = 'interpoll_poll_debug';

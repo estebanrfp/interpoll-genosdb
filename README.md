@@ -39,7 +39,7 @@ InterPoll takes a different approach, powered by **[GenosDB](https://github.com/
 - **Your vote, signed by you.** Every action is cryptographically signed by an identity that lives only on your device. No peer can forge a vote or post in your name.
 - **Owned by you, not just signed by you.** Your content isn't only unforgeable — it's yours to remove. No peer can delete your post, vote, message or profile; only you, or a moderator a community owner chooses to delegate to.
 - **Posts and comments that persist.** Community discussion is replicated across peers, not trapped in a single vendor database.
-- **Verifiable receipts.** After voting you get a short verification code. Check it in the built-in Chain Explorer any time to confirm your vote is intact.
+- **Verifiable receipts.** After voting you get a short verification code. Check it any time to confirm your vote is intact, and browse every signed operation your device holds in the built-in Chain Explorer.
 - **Works offline.** Lost your connection? Your activity is saved locally and syncs automatically when you reconnect.
 - **Private communities.** Sensitive discussions are encrypted in your browser so only invited members can read them.
 
@@ -52,7 +52,7 @@ InterPoll takes a different approach, powered by **[GenosDB](https://github.com/
 | **Cryptographically signed actions** | Every vote, post and comment is signed by your device identity and verified by peers. Forgery is impossible without your key. |
 | **Tamper-evident history** | Actions are ordered by a Hybrid Logical Clock and recorded as signed nodes. Altering the past would invalidate the signatures — and it shows. |
 | **Public posts & threaded comments** | Run community conversations alongside polls: publish updates, debate in threads, keep context attached to each topic. |
-| **Verifiable receipt** | Get a short code after voting. Enter it in the Chain Explorer to confirm your vote was recorded, unchanged. |
+| **Verifiable receipt** | Get a short code after voting. Enter it at `/receipt` to resolve the signed vote behind it — author, choice and clock — and confirm it was recorded unchanged. |
 | **Offline-first** | Vote without internet. Your record is stored locally (OPFS) and synced when you reconnect. |
 | **Private & encrypted communities** | Create communities whose content is AES-encrypted in your browser; peers only ever see ciphertext. |
 | **No algorithm** | You see what your community posts. No hidden ranking, no shadow-banning, no promoted content. |
@@ -147,7 +147,7 @@ Everything is a signed GenosDB node, queried reactively with `db.map`:
 | `community`, `membership` | Communities and signed memberships (member count derived) |
 | `chatRoom`, `chatMessage`, `dm` | Encrypted group rooms and direct messages |
 | `user` | Profiles keyed by the signing Ethereum address |
-| `chainAction`, `receipt` | The tamper-evident action log and verifiable receipts |
+| — | Receipts are **derived**, not stored: a code is SHA-256 over the vote node's id, so there is no action log to keep honest |
 | `image` | Compressed images stored as nodes |
 
 ### Key services
@@ -171,7 +171,7 @@ Everything is a signed GenosDB node, queried reactively with `db.map`:
 1. You select an option; the app records a **signed `vote` node** keyed `pollId:yourAddress` (one vote per identity — re-voting updates it in place).
 2. The Security Manager signs the operation automatically and peers verify it on receipt.
 3. The poll's tally is **derived** by aggregating its vote nodes — there are no shared counters to race on.
-4. A receipt with a short verification code is recorded for the Chain Explorer.
+4. Your receipt code is derived from that node's id, so it needs no record of its own and is the same on every device.
 5. The node syncs to peers in real time over WebRTC and to your other tabs via BroadcastChannel.
 
 ### Project layout

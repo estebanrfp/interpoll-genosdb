@@ -37,7 +37,7 @@
 import { computed } from 'vue';
 import { IonIcon, IonBadge } from '@ionic/vue';
 import { peopleOutline, documentTextOutline } from 'ionicons/icons';
-import { Community } from '../services/communityService';
+import type { Community } from '../services/communityService';
 import { useCommunityStore } from '../stores/communityStore';
 
 const props = defineProps<{ community: Community }>();

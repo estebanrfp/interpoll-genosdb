@@ -180,7 +180,7 @@ import { useCommentStore } from '../stores/commentStore';
 import { useCommunityStore } from '../stores/communityStore';
 import { useUserStore } from '../stores/userStore';
 import CommentCard from '../components/CommentCard.vue';
-import { Post } from '../services/postService';
+import type { Post } from '../services/postService';
 import { generatePseudonym } from '../utils/pseudonym';
 import { renderMarkdown } from '../utils/markdown';
 import { ModerationService, moderationVersion } from '../services/moderationService';

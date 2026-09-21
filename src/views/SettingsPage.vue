@@ -1140,8 +1140,7 @@
 </style>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted } from 'vue';
 import {
   IonPage,
   IonHeader,
@@ -1150,11 +1149,6 @@ import {
   IonContent,
   IonButtons,
   IonBackButton,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonCardContent,
   IonList,
   IonItem,
   IonLabel,
@@ -1169,26 +1163,16 @@ import {
   IonRange,
   IonChip,
   IonInput,
-  IonSpinner,
   alertController,
   toastController,
-  onIonViewWillEnter
 } from '@ionic/vue';
 import {
   refreshOutline,
-  downloadOutline,
-  cloudUploadOutline,
-  trashOutline,
   warningOutline,
   personCircleOutline,
-  globeOutline,
-  swapHorizontalOutline,
-  serverOutline,
   copyOutline,
-  eyeOutline,
   closeCircleOutline,
   checkmarkCircleOutline,
-  addOutline
 } from 'ionicons/icons';
 import { UserService } from '../services/userService';
 import { useCommunityStore } from '../stores/communityStore';
@@ -1198,10 +1182,8 @@ import { useFeedPreferences } from '../composables/useFeedPreferences';
 import type { FeedMode, FeedRankingWeights } from '../services/feedPreferencesService';
 import UserIdentityBadge from '../components/UserIdentityBadge.vue';
 
-const router = useRouter();
 const auth = useAuthStore();
 const communityStore = useCommunityStore();
-const importFileInput = ref<HTMLInputElement | null>(null);
 const activeTab = ref('general');
 const {
   preferences: feedPreferences,

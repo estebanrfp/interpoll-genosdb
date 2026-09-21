@@ -477,13 +477,6 @@ import {
   IonButton,
   IonInput,
   IonIcon,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardContent,
-  IonSegment,
-  IonSegmentButton,
-  IonLabel,
   IonSpinner,
   toastController,
   onIonViewWillEnter,
@@ -512,8 +505,10 @@ import PostCard from '../components/PostCard.vue';
 import PollCard from '../components/PollCard.vue';
 import EncryptedBadge from '../components/EncryptedBadge.vue';
 import ConsentBanner from '../components/ConsentBanner.vue';
-import { Post, PostService } from '../services/postService';
-import { Poll, PollService } from '../services/pollService';
+import { PostService } from '../services/postService';
+import type { Post } from '../services/postService';
+import { PollService } from '../services/pollService';
+import type { Poll } from '../services/pollService';
 import { CommunityService, type Community } from '../services/communityService';
 import { KeyVaultService } from '../services/keyVaultService';
 import { EncryptionService } from '../services/encryptionService';

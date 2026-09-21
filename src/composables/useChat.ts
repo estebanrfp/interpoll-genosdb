@@ -1,7 +1,9 @@
 // useChat.ts - Vue Composable for P2P Chat
 
-import { ref, onMounted, onUnmounted, Ref } from 'vue';
-import ChatService, { ChatMessage, RecipientInfo } from '../services/chatService';
+import { ref, onMounted, onUnmounted } from 'vue';
+import type { Ref } from 'vue';
+import ChatService from '../services/chatService';
+import type { ChatMessage, RecipientInfo } from '../services/chatService';
 
 interface UseChatReturn {
   chat: Ref<ChatService | null>;

@@ -494,10 +494,7 @@ import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
-  IonButtons, IonBackButton, IonSearchbar, IonSegment,
-  IonSegmentButton, IonLabel, IonSpinner, IonIcon,
-  IonCard, IonCardHeader, IonCardTitle, IonCardContent,
-  IonBadge, IonButton
+  IonButtons, IonBackButton
 } from '@ionic/vue';
 import { useSearch } from '../composables/useSearch';
 import { formatAddress } from '../utils/address';

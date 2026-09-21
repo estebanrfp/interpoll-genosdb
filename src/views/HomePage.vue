@@ -76,6 +76,10 @@
             <ion-icon :icon="settingsOutline"></ion-icon>
             <span>Settings</span>
           </button>
+          <button class="side-nav-item side-nav-util" @click="$router.push('/chain-explorer')">
+            <ion-icon :icon="cubeOutline"></ion-icon>
+            <span>Chain Explorer</span>
+          </button>
           <button class="side-nav-item side-nav-util" @click="$router.push('/resilience')">
             <ion-icon :icon="shieldOutline"></ion-icon>
             <span>Resilience Center</span>
@@ -414,8 +418,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import {
-  IonPage, IonHeader, IonToolbar, IonTitle, IonContent,IonBadge,  
-  IonButtons, IonButton, IonIcon, IonSegment, IonSegmentButton, IonFooter,
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent,
+  IonButtons, IonButton, IonIcon, IonFooter,
   IonLabel, IonSpinner, IonChip, IonSearchbar,
   IonInfiniteScroll, IonInfiniteScrollContent,
   actionSheetController, toastController
@@ -425,7 +429,7 @@ import {
   earthOutline, peopleOutline, home, homeOutline, documentTextOutline,
   chevronForwardOutline, people, addCircle, statsChartOutline,
   checkmarkCircleOutline, searchOutline, chatbubble, chatbubbleOutline,
-  shieldOutline, logOutOutline
+  shieldOutline, logOutOutline, cubeOutline
 } from 'ionicons/icons';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
@@ -435,8 +439,8 @@ import { usePollStore } from '../stores/pollStore';
 import CommunityCard from '../components/CommunityCard.vue';
 import PostCard from '../components/PostCard.vue';
 import PollCard from '../components/PollCard.vue';
-import { Post } from '../services/postService';
-import { Poll } from '../services/pollService';
+import type { Post } from '../services/postService';
+import type { Poll } from '../services/pollService';
 import { db } from '../services/gdbServices';
 import { UserService } from '../services/userService';
 import ChatService from '../services/chatService';
@@ -548,7 +552,6 @@ const totalUnread = computed(() => chatList.value.reduce((sum, c) => sum + c.unr
 
 let bgChatService: ChatService | null = null;
 let currentUserId = '';
-const gunListeners: Array<() => void> = [];
 let chatInitPromise: Promise<void> | null = null;
 let bgChatInitPromise: Promise<void> | null = null;
 
@@ -680,10 +683,6 @@ const sidebarCommunities = computed(() =>
 )
 
 // ── Chat list ─────────────────────────────────────────────────────────────────
-
-function getRoomId(a: string, b: string) {
-  return [a, b].sort().join(':');
-}
 
 let chatListUnsub: (() => void) | null = null;
 

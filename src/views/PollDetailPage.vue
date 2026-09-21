@@ -204,6 +204,11 @@
             <ion-icon :icon="checkmarkCircleOutline" color="success"></ion-icon>
             <p>You've already voted in this poll!</p>
           </div>
+          <router-link v-if="receiptCode" :to="`/receipt/${receiptCode}`" class="receipt-line">
+            <span class="receipt-label">Receipt</span>
+            <span class="receipt-code">{{ receiptCode }}</span>
+            <span class="receipt-hint">verify</span>
+          </router-link>
           <div class="separator"></div>
         </div>
 
@@ -254,11 +259,6 @@ import {
   IonContent,
   IonButtons,
   IonBackButton,
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonCardContent,
   IonList,
   IonItem,
   IonLabel,
@@ -288,6 +288,7 @@ import { PollService } from '../services/pollService';
 import type { Poll } from '../services/pollService';
 import { UserService } from '../services/userService';
 import { generatePseudonym } from '../utils/pseudonym';
+import { receiptForMyVote } from '../services/receiptService';
 
 const route = useRoute();
 const router = useRouter();
@@ -300,6 +301,13 @@ const selectedOption = ref<string>('');
 const selectedOptions = ref<string[]>([]);
 const hasVoted = ref(false);
 const currentUserId = ref('');
+/** Derived from the signed vote node, so it appears on any device that holds it. */
+const receiptCode = ref('');
+
+watch(hasVoted, async voted => {
+  const pollId = poll.value?.id;
+  receiptCode.value = voted && pollId ? (await receiptForMyVote(pollId))?.code ?? '' : '';
+});
 const inviteCodes = ref<{ code: string; used: boolean }[]>([]);
 const isLoadingCodes = ref(false);
 const loadPollRequestId = ref(0);
@@ -710,6 +718,40 @@ watch(
   margin: 0;
   font-size: 16px;
   font-weight: 500;
+}
+
+.receipt-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-md);
+  background: var(--app-surface);
+  text-decoration: none;
+  width: fit-content;
+}
+
+.receipt-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--app-text-subtle);
+}
+
+.receipt-code {
+  font-family: ui-monospace, monospace;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  color: var(--app-text);
+}
+
+.receipt-hint {
+  font-size: 12px;
+  color: var(--app-accent-bright);
 }
 
 /* Results */

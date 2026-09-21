@@ -26,7 +26,23 @@ const { gdb } = await import(/* @vite-ignore */ GENOSDB)
  * room predate ACLs (plain, ownerless) and would stay unprotected, so a clean room
  * keeps the security model intact across the whole demo.
  */
-export const GDB_NAME = 'interpoll-genosdb-acl'
+const DEFAULT_GDB_NAME = 'interpoll-genosdb-acl'
+
+/**
+ * In development only, `?room=` opens a different room.
+ *
+ * Storage isolation alone does not isolate a P2P app: a test starting from an
+ * empty disk still meets peers replicating the previous run's graph back into
+ * it. A per-run room name is what makes an E2E run start genuinely empty, and
+ * keeps it out of the live demo's room. Production ignores the parameter.
+ */
+function roomName(): string {
+  if (!import.meta.env.DEV || typeof location === 'undefined') return DEFAULT_GDB_NAME
+  const requested = new URLSearchParams(location.search).get('room')
+  return requested ? `${DEFAULT_GDB_NAME}-${requested}` : DEFAULT_GDB_NAME
+}
+
+export const GDB_NAME = roomName()
 
 /**
  * Bootstrap superadmin Ethereum addresses.
