@@ -49,6 +49,20 @@
               ></ion-input>
             </ion-item>
 
+            <ion-item lines="none">
+              <ion-select
+                v-model="category"
+                label="Category"
+                label-placement="floating"
+                interface="popover"
+                placeholder="Optional"
+              >
+                <ion-select-option v-for="option in ALL_CATEGORIES" :key="option.id" :value="option.id">
+                  {{ option.label }}
+                </ion-select-option>
+              </ion-select>
+            </ion-item>
+
             <ion-item lines="none" class="content-field">
               <div class="md-field">
                 <div class="md-field-header">
@@ -280,6 +294,7 @@ import { useCommunityStore } from '../stores/communityStore';
 import { usePostStore } from '../stores/postStore';
 import { checkContent } from '../utils/contentGuard';
 import { renderMarkdown } from '../utils/markdown';
+import { ALL_CATEGORIES } from '../utils/categories';
 
 const route = useRoute();
 const router = useRouter();
@@ -290,6 +305,7 @@ const communityId = route.params.communityId as string;
 const selectedCommunity = ref(communityId || '');
 const title = ref('');
 const content = ref('');
+const category = ref('');
 const showPreview = ref(false);
 const contentPreview = computed(() => renderMarkdown(content.value) || '<p class="md-empty">Nothing to preview</p>');
 const imageFile = ref<File | null>(null);
@@ -390,6 +406,7 @@ const submitPost = async () => {
       communityId: selectedCommunity.value,
       title: title.value.trim(),
       content: content.value.trim(),
+      category: category.value || undefined,
       imageFile: imageFile.value || undefined
     });
 

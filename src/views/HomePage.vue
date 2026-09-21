@@ -61,6 +61,31 @@
             <span>Create</span>
           </button>
 
+          <!-- ── Categories: filters the feed, counts come from this replica ── -->
+          <div class="side-nav-divider"></div>
+
+          <button class="side-nav-section" @click="categoriesOpen = !categoriesOpen">
+            <span>Categories</span>
+            <ion-icon :icon="categoriesOpen ? chevronUpOutline : chevronDownOutline" class="side-nav-section-caret" />
+          </button>
+
+          <template v-if="categoriesOpen">
+            <button
+              v-for="category in visibleCategories"
+              :key="category.id"
+              class="side-nav-item side-nav-category"
+              :class="{ active: activeCategory === category.id }"
+              @click="toggleCategory(category.id)"
+            >
+              <ion-icon :icon="category.icon" :style="{ color: category.tone }"></ion-icon>
+              <span>{{ category.label }}</span>
+            </button>
+            <button v-if="!allCategoriesShown" class="side-nav-item side-nav-more" @click="showAllCategories = true">
+              <ion-icon :icon="ellipsisHorizontalOutline"></ion-icon>
+              <span>+{{ hiddenCategoryCount }} more</span>
+            </button>
+          </template>
+
           <!-- ── Utility nav items (desktop only, replaces header buttons) ── -->
           <div class="side-nav-divider"></div>
 
@@ -377,6 +402,28 @@
             </div>
           </div>
 
+          <div v-if="topCategories.length" class="sidebar-section surface-card">
+            <div class="sidebar-header">
+              <span>Trending here</span>
+            </div>
+            <div class="sidebar-trending">
+              <button
+                v-for="entry in topCategories"
+                :key="entry.category.id"
+                class="sidebar-trending-row"
+                :class="{ active: activeCategory === entry.category.id }"
+                @click="toggleCategory(entry.category.id)"
+              >
+                <ion-icon :icon="entry.category.icon" :style="{ color: entry.category.tone }" />
+                <span class="sidebar-trending-label">{{ entry.category.label }}</span>
+                <span class="sidebar-trending-count">{{ entry.count }}</span>
+              </button>
+            </div>
+            <p class="sidebar-trending-note">
+              Counted from what this device holds — no global tally to ask for.
+            </p>
+          </div>
+
           <div class="sidebar-section sidebar-about surface-card">
             <p class="sidebar-about-title">Interpoll <span class="logo-edition">(GenosDB)</span></p>
             <p class="sidebar-about-text">A peer-to-peer community platform built on GenosDB. Posts and votes sync across all peers.</p>
@@ -429,8 +476,11 @@ import {
   earthOutline, peopleOutline, home, homeOutline, documentTextOutline,
   chevronForwardOutline, people, addCircle, statsChartOutline,
   checkmarkCircleOutline, searchOutline, chatbubble, chatbubbleOutline,
-  shieldOutline, logOutOutline, cubeOutline
+  shieldOutline, logOutOutline, cubeOutline,
+  chevronUpOutline, chevronDownOutline, ellipsisHorizontalOutline
 } from 'ionicons/icons';
+import { ALL_CATEGORIES, primaryCategories, categoryFor } from '../utils/categories';
+import { useCategoryCounts } from '../composables/useCategoryCounts';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
 import { useCommunityStore } from '../stores/communityStore';
@@ -533,6 +583,27 @@ const scrollThreshold = 50;
 
 // Add after the activeTab ref
 const feedMode = ref<'for-you' | 'latest'>('for-you')
+
+// ── Categories ───────────────────────────────────────────────────────────────
+const categoriesOpen = ref(true)
+const showAllCategories = ref(false)
+const activeCategory = ref<string | null>(null)
+const { counts: categoryCounts } = useCategoryCounts()
+
+const visibleCategories = computed(() =>
+  showAllCategories.value ? ALL_CATEGORIES : primaryCategories()
+)
+const allCategoriesShown = computed(() => visibleCategories.value.length === ALL_CATEGORIES.length)
+const hiddenCategoryCount = computed(() => ALL_CATEGORIES.length - visibleCategories.value.length)
+
+/** The five busiest categories in this replica, for the trending panel. */
+const topCategories = computed(() => categoryCounts.value.slice(0, 5))
+
+/** Selecting the active category again clears the filter. */
+function toggleCategory(id: string) {
+  activeCategory.value = activeCategory.value === id ? null : id
+  activeTab.value = 'home'
+}
 function setFeedMode(mode: 'for-you' | 'latest') {
   feedMode.value = mode
 }
@@ -589,6 +660,14 @@ const combinedFeed = computed(() => {
   pollStore.sortedPolls.forEach(poll => {
     if (!poll.isPrivate) items.push({ type: 'poll', data: poll, createdAt: poll.createdAt })
   })
+
+  // A chosen category narrows the feed before any ranking happens.
+  if (activeCategory.value) {
+    const wanted = activeCategory.value
+    const narrowed = items.filter(item => categoryFor(item.data.category).id === wanted)
+    items.length = 0
+    items.push(...narrowed)
+  }
 
   if (feedMode.value === 'latest') {
     items.sort((a, b) => b.createdAt - a.createdAt)
@@ -1302,6 +1381,92 @@ ion-header.header-hidden {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
   margin: 8px 12px;
   border-radius: 1px;
+}
+
+/* Categories */
+.side-nav-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 6px 12px 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--app-text-subtle);
+}
+
+.side-nav-section-caret {
+  font-size: 14px;
+}
+
+.side-nav-category ion-icon {
+  font-size: 17px;
+}
+
+.side-nav-more {
+  color: var(--app-text-subtle);
+}
+
+/* Trending */
+.sidebar-trending {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-trending-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 6px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--app-text);
+  text-align: left;
+  transition: background 0.12s;
+}
+
+.sidebar-trending-row:hover {
+  background: var(--app-item-surface);
+}
+
+.sidebar-trending-row.active {
+  color: var(--app-accent-bright);
+}
+
+.sidebar-trending-row ion-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.sidebar-trending-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-trending-count {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--app-text-subtle);
+}
+
+.sidebar-trending-note {
+  margin: 8px 0 0;
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--app-text-subtle);
 }
 
 .loading-container {

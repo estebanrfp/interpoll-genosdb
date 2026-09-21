@@ -18,6 +18,8 @@ export interface Post {
   authorShowRealName?: boolean
   title: string
   content: string
+  /** Taxonomy id from utils/categories; absent on content written before it existed. */
+  category?: string
   imageId?: string
   imageThumbnail?: string
   createdAt: number
@@ -52,6 +54,7 @@ export class PostService {
       authorShowRealName: post.authorShowRealName || false,
       title: post.title || '',
       content: post.content || '',
+      category: post.category || '',
       imageId: image?.cid || '',
       imageThumbnail: image?.thumbnail || '',
       createdAt: Date.now(),

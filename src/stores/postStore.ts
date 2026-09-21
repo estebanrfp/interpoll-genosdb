@@ -70,7 +70,7 @@ export const usePostStore = defineStore('post', () => {
   }
 
   // ─── Create ──────────────────────────────────────────────────────────────────
-  async function createPost(data: { communityId: string; title: string; content: string; imageFile?: File }) {
+  async function createPost(data: { communityId: string; title: string; content: string; category?: string; imageFile?: File }) {
     let joined: string[] = []
     try { joined = JSON.parse(localStorage.getItem('joined-communities') || '[]') } catch { joined = [] }
     if (!joined.includes(data.communityId)) throw new Error('COMMUNITY_JOIN_REQUIRED')
@@ -89,7 +89,7 @@ export const usePostStore = defineStore('post', () => {
       {
         communityId: data.communityId, authorId: user.id,
         authorName, authorShowRealName: showRealName,
-        title: data.title, content: data.content,
+        title: data.title, content: data.content, category: data.category,
       },
       data.imageFile,
       postId,

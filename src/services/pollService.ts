@@ -25,6 +25,8 @@ export interface Poll {
   authorShowRealName?: boolean
   question: string
   description?: string
+  /** Taxonomy id from utils/categories; absent on content written before it existed. */
+  category?: string
   options: PollOption[]
   createdAt: number
   expiresAt: number
@@ -49,6 +51,7 @@ interface CreatePollInput {
   authorShowRealName?: boolean
   question: string
   description?: string
+  category?: string
   options: string[]
   durationDays: number
   allowMultipleChoices: boolean
@@ -73,6 +76,7 @@ export class PollService {
       authorShowRealName: data.authorShowRealName ?? false,
       question: data.question,
       description: data.description ?? '',
+      category: data.category ?? '',
       options: data.options.map((text, idx) => ({ id: `${id}-option-${idx}`, text })),
       createdAt: now,
       expiresAt: now + (data.durationDays ?? 7) * DAY_MS,

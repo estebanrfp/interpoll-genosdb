@@ -119,6 +119,20 @@
           </template>
 
           <ion-item>
+            <ion-select
+              v-model="category"
+              label="Category"
+              label-placement="floating"
+              interface="popover"
+              placeholder="Optional"
+            >
+              <ion-select-option v-for="option in ALL_CATEGORIES" :key="option.id" :value="option.id">
+                {{ option.label }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item>
             <ion-textarea
               v-model="description"
               label="Description (optional)"
@@ -170,6 +184,7 @@ import { useCommunityStore } from '../stores/communityStore';
 import { usePollStore } from '../stores/pollStore';
 import type { Community } from '../services/communityService';
 import { checkContent, checkOption } from '../utils/contentGuard';
+import { ALL_CATEGORIES } from '../utils/categories';
 
 const POLL_DEBUG_KEY = 'interpoll_poll_debug';
 type PollDebugCategory = 'create' | 'writes' | 'index' | 'ui' | 'all';
@@ -223,6 +238,7 @@ const duration = ref('7');
 const allowMultipleChoices = ref(false);
 const showResultsBeforeVoting = ref(false);
 const description = ref('');
+const category = ref('');
 const isPrivate = ref(false);
 const inviteCodeCount = ref(20);
 const showSettings = ref(false);
@@ -353,6 +369,7 @@ async function createPoll() {
       communityId: selectedCommunity.value!.id,
       question: question.value.trim(),
       description: description.value.trim(),
+      category: category.value || undefined,
       options: validOptions,
       durationDays: parseInt(duration.value),
       allowMultipleChoices: allowMultipleChoices.value,

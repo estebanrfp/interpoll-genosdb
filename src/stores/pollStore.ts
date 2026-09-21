@@ -72,6 +72,7 @@ export const usePollStore = defineStore('poll', () => {
     communityId: string
     question: string
     description?: string
+    category?: string
     options: string[]
     durationDays: number
     allowMultipleChoices: boolean
