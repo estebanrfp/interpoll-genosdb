@@ -40,6 +40,32 @@
           <div class="separator"></div>
         </div>
 
+        <!-- Notifications -->
+        <div class="section">
+          <h3 class="section-title">Notifications</h3>
+          <p class="section-subtitle">
+            Raised by this device while Interpoll is open — there is no push service and
+            nothing about you leaves the browser.
+          </p>
+          <ion-list v-if="notificationsSupported">
+            <ion-item>
+              <ion-toggle :checked="notificationsOn" @ionChange="onNotificationsToggle">
+                Notify me about new messages
+              </ion-toggle>
+            </ion-item>
+          </ion-list>
+          <p v-else class="helper-text">This browser cannot show system notifications.</p>
+          <p v-if="notificationsBlocked" class="helper-text">
+            Your browser is blocking notifications for this site. Allow them in its site
+            settings to switch this on.
+          </p>
+          <p class="helper-text">
+            They arrive while the app is running, including in a background tab. A closed
+            browser cannot be woken without a server.
+          </p>
+          <div class="separator"></div>
+        </div>
+
         <!-- Content Filters (moved to Moderation tab) -->
         <div class="section">
           <h3 class="section-title">Content Filters</h3>
@@ -1175,6 +1201,7 @@ import {
   checkmarkCircleOutline,
 } from 'ionicons/icons';
 import { UserService } from '../services/userService';
+import { NotificationService } from '../services/notificationService';
 import { useCommunityStore } from '../stores/communityStore';
 import { useAuthStore } from '../stores/authStore';
 import { ModerationService, moderationVersion, type ModerationSettings, type WordCategory } from '../services/moderationService';
@@ -1202,6 +1229,27 @@ const newFeedIncludeKeyword = ref('');
 const newFeedExcludeKeyword = ref('');
 
 const isDarkMode = ref(false);
+
+// ── Notifications ────────────────────────────────────────────────────────────
+const notificationsSupported = NotificationService.isSupported();
+const notificationsOn = ref(NotificationService.isEnabled());
+const notificationsBlocked = ref(NotificationService.permission() === 'denied');
+
+/**
+ * Turning this on asks the browser for permission, which it only grants from a
+ * user gesture — so this lives behind the toggle and never runs at startup.
+ */
+async function onNotificationsToggle(event: CustomEvent) {
+  const wanted = (event.detail as { checked: boolean }).checked;
+  if (!wanted) {
+    NotificationService.disable();
+    notificationsOn.value = false;
+    return;
+  }
+  const result = await NotificationService.enable();
+  notificationsOn.value = result === 'granted';
+  notificationsBlocked.value = result === 'denied';
+}
 const userProfile = ref<any>(null);
 
 const feedCommunities = computed(() =>

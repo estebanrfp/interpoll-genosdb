@@ -480,6 +480,7 @@ import {
   chevronUpOutline, chevronDownOutline, ellipsisHorizontalOutline
 } from 'ionicons/icons';
 import { ALL_CATEGORIES, primaryCategories, categoryFor } from '../utils/categories';
+import { NotificationService } from '../services/notificationService';
 import { useCategoryCounts } from '../composables/useCategoryCounts';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/authStore';
@@ -842,12 +843,22 @@ async function initBackgroundChat() {
 
     if (activeTab.value !== 'chat') {
       const senderName = chatList.value.find(c => c.userId === msg.from)?.name || 'Someone';
-      toastController.create({
-        message:  `💬 New message from ${senderName}`,
-        duration: 3000,
-        position: 'top',
-        buttons:  [{ text: 'View', handler: () => { activeTab.value = 'chat'; } }],
-      }).then(t => t.present());
+      // A system notice when the tab is not being looked at, an in-app toast when
+      // it is. `notify` returns false whenever it declines, so exactly one fires.
+      const notified = NotificationService.notify({
+        title: `Message from ${senderName}`,
+        body: 'Encrypted — open Interpoll to read it.',
+        tag: `dm:${msg.from}`,
+        onClick: () => { activeTab.value = 'chat'; },
+      });
+      if (!notified) {
+        toastController.create({
+          message:  `💬 New message from ${senderName}`,
+          duration: 3000,
+          position: 'top',
+          buttons:  [{ text: 'View', handler: () => { activeTab.value = 'chat'; } }],
+        }).then(t => t.present());
+      }
     }
   };
 
