@@ -122,8 +122,38 @@ The app opens at `http://localhost:5173`.
 pnpm dev       # Start the Vite dev server
 pnpm build     # Production build
 pnpm preview   # Serve the built dist/ folder locally
-pnpm test      # Run the Vitest test suite
+pnpm test      # Unit tests, then the end-to-end suite
 ```
+
+---
+
+## Verify it yourself
+
+Nothing here has to be taken on trust. The end-to-end suite drives real browsers
+and proves the claims this README makes — including the one that matters most,
+that two peers sync with no server in between.
+
+```bash
+pnpm install
+pnpm exec playwright install chromium   # first run only
+pnpm test:e2e
+```
+
+The suite starts the dev server itself, so there is nothing else to set up.
+`pnpm test:e2e:ui` opens Playwright's runner if you would rather watch it.
+
+| Spec | What it proves |
+| :--- | :--- |
+| `sync.spec.js` | Two peers, **each in its own browser context** — its own OPFS, storage and cookies. One publishes a poll, the other votes, and the tally converges. Afterwards it reads the browser's own `RTCPeerConnection` statistics and asserts a **succeeded ICE candidate pair with bytes on it**, so the data provably crossed WebRTC rather than shared storage. A second test writes **while offline** and asserts it converges on reconnection. |
+| `isolation.spec.js` | A platform check the rest depends on: OPFS really is isolated between browser contexts, and shared between tabs of one. If a browser update changes that, this fails loudly instead of quietly invalidating every multi-peer result. |
+| `content.spec.js` | The path a person takes, through the interface: create a community, publish a post in it, vote — and the vote lands as **its own node owned by the voter**, not a counter anyone could inflate. |
+| `receipt.spec.js` | A receipt code resolves to the signed vote behind it, and an unknown code is reported rather than invented. The expected code is **re-derived independently in Node**, so the app agreeing with itself is not enough. |
+| `onboarding.spec.js` | The three-step welcome, and that spaces picked *before* an identity exists are really joined by the identity created afterwards. |
+| `categories.spec.js` | Trending counts follow the data — uncategorised content lands in `Other` and is still counted — and picking a category narrows the feed to exactly that category. |
+| `notifications.spec.js` | Permission is asked from the user gesture that browsers require, and the preference survives a reload. |
+
+Unit tests (`pnpm test:unit`) cover the pure logic: ranking, moderation, search,
+feed preferences and the notification rules.
 
 > **Bundler note:** GenosDB is neither installed nor bundled. `gdbServices.ts` loads it at runtime from the jsDelivr CDN (`genosdb@latest`), where the engine resolves its own modules (Security Manager, GenosRTC, …) beside itself, so every engine release reaches the app without a rebuild. `build.target` is `es2022` (for GenosDB's top-level `await`).
 

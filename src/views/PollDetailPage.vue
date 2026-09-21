@@ -7,8 +7,11 @@
           <ion-back-button :default-href="poll?.communityId ? `/community/${poll.communityId}` : '/home'"></ion-back-button>
         </ion-buttons>
         <ion-title>Poll</ion-title>
-        <ion-buttons slot="end" v-if="poll && isAuthor && poll.isPrivate">
-          <ion-button @click="loadInviteCodes">
+        <ion-buttons slot="end">
+          <ion-button v-if="poll && isAuthor && poll.isPrivate" @click="loadInviteCodes">
+            <ion-icon :icon="keyOutline"></ion-icon>
+          </ion-button>
+          <ion-button v-if="poll" aria-label="Share poll" @click="sharePoll">
             <ion-icon :icon="shareOutline"></ion-icon>
           </ion-button>
         </ion-buttons>
@@ -281,6 +284,7 @@ import {
   eyeOffOutline,
   lockClosedOutline,
   shareOutline,
+  keyOutline,
   copyOutline
 } from 'ionicons/icons';
 import { usePollStore } from '../stores/pollStore';
@@ -288,6 +292,7 @@ import { PollService } from '../services/pollService';
 import type { Poll } from '../services/pollService';
 import { UserService } from '../services/userService';
 import { generatePseudonym } from '../utils/pseudonym';
+import { shareOrCopy, shareMessage } from '../utils/share';
 import { receiptForMyVote } from '../services/receiptService';
 
 const route = useRoute();
@@ -437,6 +442,17 @@ async function submitVote() {
   } finally {
     isSubmitting.value = false
   }
+}
+
+/** Share the poll itself — the sheet on a phone, the clipboard everywhere else. */
+async function sharePoll() {
+  if (!poll.value) return
+  const outcome = await shareOrCopy({
+    title: poll.value.question,
+    url: window.location.href,
+  })
+  const message = shareMessage(outcome, 'Poll link')
+  if (message) await presentToast(message)
 }
 
 async function loadPoll() {

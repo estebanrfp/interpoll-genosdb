@@ -167,7 +167,7 @@ import {
   IonButtons, IonBackButton, IonButton, IonIcon,
   IonChip,
   IonLabel, IonSpinner, IonTextarea, IonBadge,
-  toastController, actionSheetController, alertController
+  toastController, alertController
 } from '@ionic/vue';
 import {
   peopleOutline, arrowUpOutline, arrowDownOutline,
@@ -187,6 +187,7 @@ import { ModerationService, moderationVersion } from '../services/moderationServ
 
 import { ImageService } from '../services/imageService';
 import { checkContent } from '../utils/contentGuard';
+import { shareOrCopy, shareMessage } from '../utils/share';
 
 const route = useRoute();
 const router = useRouter();
@@ -542,33 +543,19 @@ async function handleCommentDownvote(comment: any) {
 
 async function sharePost() {
   if (!post.value) return;
-  const actionSheet = await actionSheetController.create({
-    header: 'Share Post',
-    buttons: [
-      {
-        text: 'Copy Link',
-        icon: 'link-outline',
-        handler: () => {
-          navigator.clipboard.writeText(window.location.href);
-          toastController.create({ message: 'Link copied to clipboard', duration: 2000 })
-            .then(t => t.present());
-        }
-      },
-      {
-        text: 'Share via...',
-        icon: 'share-social-outline',
-        handler: () => {
-          navigator.share?.({
-            title: post.value!.title,
-            text: post.value!.content,
-            url: window.location.href
-          });
-        }
-      },
-      { text: 'Cancel', role: 'cancel' }
-    ]
+  // One action: the system sheet where there is one, the clipboard otherwise.
+  // The old menu offered "Share via…" on every platform and did nothing at all
+  // on those without `navigator.share`.
+  const outcome = await shareOrCopy({
+    title: post.value.title,
+    text: post.value.content,
+    url: window.location.href,
   });
-  await actionSheet.present();
+  const message = shareMessage(outcome, 'Post link');
+  if (message) {
+    const toast = await toastController.create({ message, duration: 2000 });
+    await toast.present();
+  }
 }
 
 async function loadPost() {

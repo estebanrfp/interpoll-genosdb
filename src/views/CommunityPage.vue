@@ -516,6 +516,7 @@ import { InviteLinkService } from '../services/inviteLinkService';
 import { ModerationService, moderationVersion } from '../services/moderationService';
 import { useFeedPreferences } from '../composables/useFeedPreferences';
 import { rankFeedItems } from '../utils/feedRanking';
+import { shareOrCopy, shareMessage } from '../utils/share';
 
 const route = useRoute();
 const router = useRouter();
@@ -927,12 +928,17 @@ async function shareInviteLink() {
     const aesKey = await EncryptionService.importKey(storedKey.key);
     const base64Url = await EncryptionService.exportKeyAsBase64Url(aesKey);
     const link = InviteLinkService.generateInviteLink(communityId.value, 'community', base64Url);
-    await InviteLinkService.copyToClipboard(link);
-    const toast = await toastController.create({
-      message: 'Invite link copied to clipboard!',
-      duration: 2000,
+    // The key rides in the URL fragment, so the share sheet hands it straight to
+    // the recipient's app — it never reaches a server on the way.
+    const outcome = await shareOrCopy({
+      title: `Join ${community.value?.displayName ?? 'this community'} on Interpoll`,
+      url: link,
     });
-    await toast.present();
+    const message = shareMessage(outcome, 'Invite link');
+    if (message) {
+      const toast = await toastController.create({ message, duration: 2000 });
+      await toast.present();
+    }
   } catch (error) {
     console.error('Failed to generate invite link:', error);
     const toast = await toastController.create({
