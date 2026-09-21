@@ -1,4 +1,4 @@
-# InterPoll
+# Interpoll (GenosDB)
 
 > **"101% Uptime!!!"** — *A voice for everyone, with records that are harder to erase.*
 
@@ -7,7 +7,7 @@
 > build. Open it in two browsers to watch polls and votes sync peer-to-peer,
 > with no backend in between.
 
-<img width="1918" height="966" alt="InterPoll screenshot" src="https://github.com/user-attachments/assets/31717176-eb42-43b2-8200-8da9cf022550" />
+<img alt="Interpoll (GenosDB) — feed, categories and live trending" src="docs/images/screenshot.png" />
 
 > ### 🛰️ A GenosDB build of InterPoll — shared as a friendly contribution
 > This repository is a fork of [**theEndless11's InterPoll**](https://github.com/theEndless11/decentralised),
