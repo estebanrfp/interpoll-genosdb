@@ -68,10 +68,17 @@
 </template>
 
 <style scoped>
+/* A feed row, not a floating card: a hairline divides it from the next and the
+   hover is barely there, so the eye follows the content and not the chrome. */
 .post-card {
   margin: 0 0 24px;
   padding: 20px 0 18px;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid var(--app-border);
+  transition: background 0.12s;
+}
+
+.post-card:hover {
+  background: rgba(255, 255, 255, 0.012);
 }
 
 .post-header {
@@ -107,10 +114,10 @@
 
 .post-title {
   margin: 0 0 10px;
-  font-size: 20px;
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.28;
+  letter-spacing: -0.025em;
   color: var(--app-text);
 }
 

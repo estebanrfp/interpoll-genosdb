@@ -159,7 +159,7 @@ function getTimeRemaining(): string {
 .poll-card {
   margin: 0 0 24px;
   padding: 20px 0 18px;
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  border-bottom: 1px solid var(--app-border);
 }
 
 .poll-header {
@@ -225,13 +225,18 @@ function getTimeRemaining(): string {
   color: var(--app-text-subtle);
 }
 
+/* The one place a gradient runs through type: it marks a poll as the thing
+   being decided, without needing a second accent colour anywhere else. */
 .poll-question {
   margin: 0 0 10px;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 800;
   line-height: 1.25;
-  letter-spacing: -0.02em;
-  color: var(--app-text);
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--app-text) 60%, rgba(167, 139, 250, 0.85));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .poll-description {
@@ -253,7 +258,7 @@ function getTimeRemaining(): string {
 }
 
 .option-bar {
-  height: 8px;
+  height: 5px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 999px;
   overflow: hidden;

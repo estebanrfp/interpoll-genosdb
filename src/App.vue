@@ -1,4 +1,6 @@
 <template>
+  <!-- Outside ion-app on purpose: it is the layer every glass surface blurs. -->
+  <AuroraBackground />
   <ion-app>
     <AppLoader v-if="!appReady" />
     <ion-router-outlet v-else :animated="false" />
@@ -12,6 +14,7 @@ import { IonApp, IonRouterOutlet } from '@ionic/vue';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import AppLoader from './components/AppLoader.vue';
+import AuroraBackground from './components/AuroraBackground.vue';
 import GlobalCommandPalette from './components/GlobalCommandPalette.vue';
 import OnboardingModal from './components/OnboardingModal.vue';
 
@@ -119,7 +122,12 @@ ion-header ion-toolbar:first-of-type {
   padding-top: env(safe-area-inset-top, 0px);
 }
 
+/* Sits above the aurora. `backdrop-filter` only shows through when the
+   ancestor is genuinely transparent, so this is what makes the glass work. */
 ion-app {
-  background: transparent;
+  position: relative;
+  z-index: 1;
+  background: transparent !important;
+  --ion-background-color: transparent;
 }
 </style>
